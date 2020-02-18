@@ -1,0 +1,3 @@
+elery  -A  currency_exchange worker -l info
+docker-compose -f dc.yml up -d
+docker-compose -f dc.yml down

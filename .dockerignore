@@ -1,0 +1,9 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+dc.yml
+README.md
+tests.py
+settings_local.py
+LICENSE
