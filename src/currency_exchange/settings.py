@@ -3,7 +3,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -14,7 +13,6 @@ SECRET_KEY = 'lqnc3q63(uf&b&=%v2vql=+gukpwhi8tg*g!)fj3e8*xet790='
 DEBUG = False
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -65,7 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'currency_exchange.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -82,20 +79,18 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'currency_exchange',
         'USER': 'ce',
-        'PASSWORD': '12345kv',
-        'HOST': 'localhost',
+        'PASSWORD': 'password',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
 
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'LOCATION': 'memcached',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -115,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -130,6 +124,10 @@ USE_L10N = True
 USE_TZ = True
 
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -142,6 +140,23 @@ LOGOUT_REDIRECT_URL = 'home'
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+
+# CELERY_BROKER_URL = 'amqp://guest@rabbit'
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'work_test1': {
+        'task': 'account.tasks.work_test',
+        'schedule': crontab(),
+    }
+}
+
 
 try:
     from currency_exchange.settings_local import *  # noqa

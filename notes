@@ -1,3 +1,33 @@
-elery  -A  currency_exchange worker -l info
+Celery  -A  currency_exchange worker -l info
 docker-compose -f dc.yml up -d
 docker-compose -f dc.yml down
+tree /a /f
+
+service rabbitmq-server stop
+docker system prune -a    # delete cache
+
+docker ps
+docker ps -a
+docker container ls
+docker-compose -f dc.yml restart rabbitmq postgres web
+
+
+sudo lsof -i :5672 | grep LISTEN
+netstat -pna | grep 5672
+sudo kill 6992
+
+ps aux|grep 'celery worker'
+
+
+service rabbitmq-server stop
+service rabbitmq-server start
+
+
+https://www.adaptamize.com/blog/simple-docker-django-celery
+
+
+docker-compose -f dc.yml run web python src/manage.py makemigrations
+docker-compose -f dc.yml run web python src/manage.py migrate
+docker-compose -f dc.yml run web python src/manage.py createsuperuser
+
+

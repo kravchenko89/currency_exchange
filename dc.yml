@@ -18,21 +18,54 @@ services:
       - "11211:11211"
 
   postgres:
-    image: postgres:11.3
+    image: postgres:12.2
     container_name: postgres
     restart: always
     ports:
       - "5432:5432"
 
     environment:
-      - POSTGRES_PASSWORD=12345kv
+      - POSTGRES_PASSWORD=password
       - POSTGRES_USER=ce
       - POSTGRES_DB=currency_exchange
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  web:
+    build: .
+    command: python src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/src
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+
+  celery-worker1:
+    build: .
+    container_name: celery-worker1
+    command: celery -A src/currency_exchange worker -l info
+    volumes:
+      - .:/src
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A stc/currency_exchange beat -l info
+    volumes:
+      - .:/src
+    depends_on:
+      - postgres
+      - rabbitmq
+
 volumes:
    pgdata: {}
+
+
 
 
 
