@@ -1,20 +1,17 @@
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from celery.schedules import crontab
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'lqnc3q63(uf&b&=%v2vql=+gukpwhi8tg*g!)fj3e8*xet790='
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = False
 
 ALLOWED_HOSTS = []
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +26,8 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'account',
+
+    'currency',
 
 ]
 
@@ -77,18 +76,18 @@ WSGI_APPLICATION = 'currency_exchange.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'currency_exchange',
-        'USER': 'ce',
-        'PASSWORD': 'password',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'memcached',
+        'LOCATION': f"{os.environ['MEMCACHED_HOST']}:{os.environ['MEMCACHED_PORT']}"
     }
 }
 
@@ -123,7 +122,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
@@ -141,22 +139,29 @@ LOGOUT_REDIRECT_URL = 'home'
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
-
+CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
+    os.environ['RABBITMQ_DEFAULT_USER'],
+    os.environ['RABBITMQ_DEFAULT_PASS'],
+    os.environ['RABBITMQ_DEFAULT_HOST'],
+    os.environ['RABBITMQ_DEFAULT_PORT'],
+)
 # CELERY_BROKER_URL = 'amqp://guest@rabbit'
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
+# CELERY_ACCEPT_CONTENT = ["json"]
+# CELERY_TASK_SERIALIZER = "json"
+# CELERY_RESULT_SERIALIZER = "json"
 
-from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
-    'work_test1': {
-        'task': 'account.tasks.work_test',
-        'schedule': crontab(),
+    'parse-rates': {
+        'task': 'currency.tasks.parse_rates',
+        'schedule': crontab(minute='*/1')
     }
-}
 
+#     'work_test1': {
+#         'task': 'account.tasks.work_test',
+#         'schedule': crontab(),
+#     }
+}
 
 try:
     from currency_exchange.settings_local import *  # noqa

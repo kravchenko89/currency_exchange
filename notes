@@ -1,6 +1,9 @@
 Celery  -A  currency_exchange worker -l info
 docker-compose -f dc.yml up -d
 docker-compose -f dc.yml down
+docker container kill $(docker ps -q)
+
+docker logs -f --tail 100 nginx     # -it nginx sh
 tree /a /f
 
 service rabbitmq-server stop
@@ -10,6 +13,8 @@ docker ps
 docker ps -a
 docker container ls
 docker-compose -f dc.yml restart rabbitmq postgres web
+docker images -a
+
 
 
 sudo lsof -i :5672 | grep LISTEN
