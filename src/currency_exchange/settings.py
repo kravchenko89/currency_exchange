@@ -1,6 +1,7 @@
 import os
 
 from celery.schedules import crontab
+from django.urls import reverse_lazy
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -62,17 +63,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'currency_exchange.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -133,8 +123,8 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'account.User'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
@@ -145,22 +135,13 @@ CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
     os.environ['RABBITMQ_DEFAULT_HOST'],
     os.environ['RABBITMQ_DEFAULT_PORT'],
 )
-# CELERY_BROKER_URL = 'amqp://guest@rabbit'
-# CELERY_ACCEPT_CONTENT = ["json"]
-# CELERY_TASK_SERIALIZER = "json"
-# CELERY_RESULT_SERIALIZER = "json"
-
 
 CELERY_BEAT_SCHEDULE = {
     'parse-rates': {
         'task': 'currency.tasks.parse_rates',
-        'schedule': crontab(minute='*/1')
+        'schedule': crontab(hour='*/1')
     }
 
-#     'work_test1': {
-#         'task': 'account.tasks.work_test',
-#         'schedule': crontab(),
-#     }
 }
 
 try:
