@@ -11,7 +11,7 @@ currency exchange
         <a href="{% url 'index' %}">Index Link</a>
     </div>
     <div class="col-sm">
-    {% if request.user.is_anonymous %}
+    {% if user.is_anonymous %}
     <a href="{% url 'account:registration' %}">SingUp</a>
     <a href="{% url 'login' %}">login</a>
         {% else %}
