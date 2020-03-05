@@ -11,4 +11,4 @@ class Rate(models.Model):
     source = models.PositiveSmallIntegerField(choices=mch.SOURCE_CHOICES)
 
     def __str__(self):
-        return f'{self.created} {self.get_currency_display()} {self.buy} {self.sale}'
+        return f'{self.get_source_display()} {self.created} {self.get_currency_display()} {self.buy} {self.sale}'
