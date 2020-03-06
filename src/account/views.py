@@ -41,12 +41,10 @@ class EmailUs(CreateView):
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
-
+        response = super().form_valid(form)
         send_email_task.delay(subject=self.object.title, message=self.object.text,
-                              email_from=self.object.email,
-                              recipient_list=[settings.EMAIL_HOST_USER, ])
-        # breakpoint()
-        return super().form_valid(form)
+                              email_from=self.object.email, recipient_list=[settings.EMAIL_HOST_USER, ])
+        return response
 
 
 class MyProfile(UpdateView):
