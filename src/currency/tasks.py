@@ -190,13 +190,3 @@ def parse_rates():
     pumb()
     btabank()
     oschad()
-
-# soup.select('.exchange-rate:first-of-type table tr:nth-of-type(2) td:not(:first-of-type)')
-# Out[32]: [<td>24.45</td>, <td>24.70</td>]
-#
-#
-#
-#
-#  soup.select('.exchange-rate:first-of-type table tr:nth-of-type(3) td:not(:first-of-type)')
-# Out[33]: [<td>26.75</td>, <td>27.05</td>]
-#
