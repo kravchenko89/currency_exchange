@@ -1,12 +1,12 @@
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import CreateView
-from django.views.generic import UpdateView
+from django.conf import settings
+from django.views.generic import CreateView, UpdateView, ListView
 
 from account.forms import UserCreationForm
 from account.models import User, Contact
 from account.tasks import send_email_task
-from django.conf import settings
+from currency.models import Rate
 
 
 # from django.views.generic import TemplateView
@@ -50,5 +50,13 @@ class EmailUs(CreateView):
 class MyProfile(UpdateView):
     template_name = 'my_profile.html'
     queryset = User.objects.filter(is_active=True)
-    fields = ('email',)
+    fields = ('email', )
+    slug_url_kwarg = reverse_lazy('index')
+
+
+class LatestRates(ListView):
+    model = Rate
+    template_name = 'rate.html'
+    queryset = Rate.objects.all().order_by('-id')[:20][::-1]
+    context_object_name = 'rates'
     slug_url_kwarg = reverse_lazy('index')
