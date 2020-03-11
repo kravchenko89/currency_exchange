@@ -1,7 +1,8 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin, auth
 from django.urls import path, include
-from django.views.generic.base import TemplateView
+from django.views.generic import TemplateView
 
 urlpatterns = [
 
@@ -9,7 +10,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('auth/', include('django.contrib.auth.urls')),
 
-    path('index/', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('', TemplateView.as_view(template_name='base.html'), name='index'),
 
 ]
 
@@ -17,5 +18,7 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [
-                      path('__debug__/', include(debug_toolbar.urls))
-                  ] + urlpatterns
+                      path('__debug__/', include(debug_toolbar.urls)),
+
+
+                  ] + urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

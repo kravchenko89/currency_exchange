@@ -17,7 +17,6 @@ docker images -a
 
 docker-compose -f dc.yml up --build
 
-
 sudo nginx -s stop
 
 
@@ -35,11 +34,16 @@ service rabbitmq-server start
 https://www.adaptamize.com/blog/simple-docker-django-celery
 
 
-docker-compose -f dc.yml run web python src/manage.py makemigrations
-docker-compose -f dc.yml run web python src/manage.py migrate
-docker-compose -f dc.yml run web python src/manage.py createsuperuser
+docker exec -it backend python src/manage.py makemigrations
+docker exec -it backend python src/manage.py migrate
+docker exec -it backend python src/manage.py createsuperuser
 
 docker exec -it backend python src/manage.py shell_plus
+systemctl status memcached
+
+docker exec -it backend python src/manage.py runserver 0:8001
+
+
 
 IPv4 223.45.12.56
 IPv6 123abc:
