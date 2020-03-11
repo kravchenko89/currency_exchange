@@ -1,5 +1,5 @@
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from django.views import generic
 from django.conf import settings
 from django.views.generic import CreateView, UpdateView, ListView
 
@@ -20,17 +20,18 @@ from currency.models import Rate
 #     def post(self):
 #         pass
 
-class SignUp(generic.CreateView):
+class UserCreate(CreateView):
     form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    success_url = reverse_lazy('index')
+    template_name = 'registration/singup.html'
 
 
-class UserCreate(generic.CreateView):
+class UserLogin(LoginView):
     model = User
-    fields = ['username', 'email']
-    template_name = 'registration/registration.html'
-    pass
+    fields = ['username', 'password']
+    template_name = 'registration/login.html'
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('index')
 
 
 class EmailUs(CreateView):
@@ -50,8 +51,8 @@ class EmailUs(CreateView):
 class MyProfile(UpdateView):
     template_name = 'my_profile.html'
     queryset = User.objects.filter(is_active=True)
-    fields = ('email', )
-    slug_url_kwarg = reverse_lazy('index')
+    fields = ('email', 'username')
+    success_url = reverse_lazy('index')
 
 
 class LatestRates(ListView):
@@ -59,4 +60,4 @@ class LatestRates(ListView):
     template_name = 'rate.html'
     queryset = Rate.objects.all().order_by('-id')[:20][::-1]
     context_object_name = 'rates'
-    slug_url_kwarg = reverse_lazy('index')
+    success_url = reverse_lazy('index')
