@@ -1,12 +1,13 @@
+from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views import generic
-from django.views.generic import CreateView
-from django.views.generic import UpdateView
+from django.conf import settings
+from django.views.generic import CreateView, UpdateView, ListView, View
 
 from account.forms import UserCreationForm
 from account.models import User, Contact
 from account.tasks import send_email_task
-from django.conf import settings
+from currency.models import Rate
 
 
 # from django.views.generic import TemplateView
@@ -20,17 +21,18 @@ from django.conf import settings
 #     def post(self):
 #         pass
 
-class SignUp(generic.CreateView):
+class UserCreate(CreateView):
     form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    success_url = reverse_lazy('index')
+    template_name = 'registration/singup.html'
 
 
-class UserCreate(generic.CreateView):
+class UserLogin(LoginView):
     model = User
-    fields = ['username', 'email']
-    template_name = 'registration/registration.html'
-    pass
+    fields = ['username', 'password']
+    template_name = 'registration/login.html'
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('index')
 
 
 class EmailUs(CreateView):
@@ -50,5 +52,20 @@ class EmailUs(CreateView):
 class MyProfile(UpdateView):
     template_name = 'my_profile.html'
     queryset = User.objects.filter(is_active=True)
-    fields = ('email',)
-    slug_url_kwarg = reverse_lazy('index')
+    fields = ('email', 'username')
+    success_url = reverse_lazy('index')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(id=self.request.user.id)
+
+
+class LatestRates(ListView):
+    model = Rate
+    template_name = 'rate.html'
+    queryset = Rate.objects.all().order_by('-id')[:20][::-1]
+    context_object_name = 'rates'
+    success_url = reverse_lazy('index')
+
+
+

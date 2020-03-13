@@ -9,6 +9,5 @@ class UserAdmin(admin.ModelAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     model = User
-
-
-# admin.site.register(User, UserAdmin)
+    list_filter = ('is_staff', )
+    fields = ('username', 'email', 'password', 'is_staff', 'is_active', 'avatar')
