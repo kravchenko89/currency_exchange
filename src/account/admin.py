@@ -10,4 +10,4 @@ class UserAdmin(admin.ModelAdmin):
     form = UserChangeForm
     model = User
     list_filter = ('is_staff', )
-    fields = ('username', 'email', 'password', 'is_staff')
+    fields = ('username', 'email', 'password', 'is_staff', 'is_active', 'avatar')

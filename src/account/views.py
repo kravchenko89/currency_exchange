@@ -1,7 +1,8 @@
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.conf import settings
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView, View
 
 from account.forms import UserCreationForm
 from account.models import User, Contact
@@ -54,6 +55,10 @@ class MyProfile(UpdateView):
     fields = ('email', 'username')
     success_url = reverse_lazy('index')
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(id=self.request.user.id)
+
 
 class LatestRates(ListView):
     model = Rate
@@ -61,3 +66,6 @@ class LatestRates(ListView):
     queryset = Rate.objects.all().order_by('-id')[:20][::-1]
     context_object_name = 'rates'
     success_url = reverse_lazy('index')
+
+
+
