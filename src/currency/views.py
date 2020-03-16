@@ -1,9 +1,19 @@
 import csv
 
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views.generic import View, ListView
+from django.urls import reverse_lazy
 
 from currency.models import Rate
+
+
+class LatestRates(ListView):
+    model = Rate
+    template_name = 'rate.html'
+    paginate_by = 20
+    ordering = ['-created']
+    context_object_name = 'rates'
+    success_url = reverse_lazy('index')
 
 '''
 class Rate(models.Model):
