@@ -133,3 +133,4 @@ dmypy.json
 settings_local.py
 !.gitkeep
 run/
+static_content

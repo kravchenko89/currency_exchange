@@ -58,14 +58,3 @@ class MyProfile(UpdateView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(id=self.request.user.id)
-
-
-class LatestRates(ListView):
-    model = Rate
-    template_name = 'rate.html'
-    queryset = Rate.objects.all().order_by('-id')[:20][::-1]
-    context_object_name = 'rates'
-    success_url = reverse_lazy('index')
-
-
-
