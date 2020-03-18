@@ -43,7 +43,7 @@ systemctl status memcached
 
 docker exec -it backend python src/manage.py runserver 0:8001
 
-
+ssh root@134.122.114.157
 
 IPv4 223.45.12.56
 IPv6 123abc:
