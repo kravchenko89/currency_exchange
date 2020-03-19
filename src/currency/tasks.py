@@ -4,6 +4,7 @@ from celery import shared_task
 from decimal import Decimal
 from bs4 import BeautifulSoup
 
+
 from currency.models import Rate
 from currency import model_choices as mch
 
@@ -45,11 +46,11 @@ def mono():
                 'currency': currency,
                 'buy': Decimal(rate['rateBuy']).__round__(2),
                 'sale': Decimal(rate['rateSell']).__round__(2),
-                'source': mch.SR_MONO,
+                'source': mch.SR_PRIVAT,
             }
 
             new_rate = Rate(**rate_kwargs)
-            last_rate = Rate.objects.filter(currency=currency, source=mch.SR_MONO).last()
+            last_rate = Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).last()
 
             if last_rate is None or (new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
                 new_rate.save()
