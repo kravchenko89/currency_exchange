@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('', TemplateView.as_view(template_name='base.html'), name='index'),
 
+    path('', include('broadcast.urls')),
+
 ]
 
 if settings.DEBUG:
