@@ -63,6 +63,13 @@ $ docker-compose -f dc.yml run web python src/manage.py makemigrations
 $ docker-compose -f dc.yml run web python src/manage.py migrate
 ```
 
+#### private bank currency loading for 4 years
+
+```buildoutcfg//
+$ docker exec -it backend python src/manage.py privat_archive
+
+```
+
 #### Some commands for working with containers
 
 ```buildoutcfg//
