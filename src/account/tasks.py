@@ -12,7 +12,7 @@ def send_email_task(subject, message,
 
 @shared_task()
 def send_activation_code_async(email_to, code):
-    path = reverse('account:activate', args=(code, ))
+    path = reverse('account:activate', args=(code,))
 
     send_mail(
         'Your activation code',
@@ -24,5 +24,5 @@ def send_activation_code_async(email_to, code):
 
 
 @shared_task()
-def send_activation_code_sms(phone_to, code):
-    send_mail(phone_to, fail_silently=False)
+def send_activation_code_sms(phone, code):
+    print(phone, code)

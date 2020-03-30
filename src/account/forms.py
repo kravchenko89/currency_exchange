@@ -25,8 +25,11 @@ class UserCreationForm(forms.ModelForm):
         user.is_active = False
         user.save()
 
-        activation_code = user.activation_codes.create()
-        activation_code.send_activation_code()
+        # activation_code = user.activation_codes.create()
+        # activation_code.send_activation_code()
+
+        sms_code = user.sms_codes.create()
+        sms_code.send_activation_code_sms()
         return user
 
 
@@ -34,3 +37,8 @@ class UserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+
+class ActivateForm(forms.Form):
+    sms_code = forms.CharField()
+    # user_id = forms.CharField(widget=forms.HiddenInput())

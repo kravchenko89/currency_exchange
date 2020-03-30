@@ -1,20 +1,51 @@
-from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponse, Http404
+from django.contrib.auth.views import LoginView
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.conf import settings
-from django.views.generic import CreateView, UpdateView, ListView, View
+from django.views.generic import CreateView, UpdateView, FormView
 
-from account.forms import UserCreationForm
-from account.models import User, Contact, ActivationCode
+from account.forms import UserCreationForm, ActivateForm
+from account.models import User, Contact, ActivationCodeSMS
 from account.tasks import send_email_task
 
 
 class UserCreate(CreateView):
     form_class = UserCreationForm
     queryset = User.objects.all()
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('account:activate')
     template_name = 'registration/singup.html'
+
+    def get_success_url(self):
+        self.request.session['user_id'] = self.object.id
+        return super().get_success_url()
+
+
+class Activate(FormView):
+    form_class = ActivateForm
+    template_name = 'sms_code.html'
+
+    def post(self, request):
+        user_id = request.session['user_id']
+        sms_code = request.POST['sms_code']
+        ac = get_object_or_404(
+            ActivationCodeSMS.objects.select_related('user'),
+            code=sms_code,
+            user_id=user_id,
+            is_activated=False,
+        )
+
+        if ac.is_expired:
+            raise Http404
+
+        ac.is_activated = True
+        ac.save(update_fields=['is_activated'])
+
+        user = ac.user
+        user.is_active = True
+        user.save(update_fields=['is_active'])
+
+        return redirect('index')
 
 
 class UserLogin(LoginView):
@@ -48,39 +79,3 @@ class MyProfile(UpdateView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(id=self.request.user.id)
-
-
-class Activate(View):
-    def get(self, request, activation_code):
-        ac = get_object_or_404(
-            ActivationCode.objects.select_related('user'),
-            code=activation_code, is_activated=False,
-        )
-
-        if ac.is_expired:
-            raise Http404
-
-        ac.is_activated = True
-        ac.save(update_fields=['is_activated'])
-
-        user = ac.user
-        user.is_active = True
-        user.save(update_fields=['is_active'])
-        return redirect('index')
-
-
-from django.conf import settings
-from django.http import HttpResponse
-from twilio.rest import Client
-
-
-def broadcast_sms(request):
-    message_to_broadcast = ("Have you played the incredible TwilioQuest "
-                                                "yet? Grab it here: https://www.twilio.com/quest")
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    for recipient in settings.SMS_BROADCAST_TO_NUMBERS:
-        if recipient:
-            client.messages.create(to=recipient,
-                                   from_=settings.TWILIO_NUMBER,
-                                   body=message_to_broadcast)
-    return HttpResponse("messages sent!", 200)
