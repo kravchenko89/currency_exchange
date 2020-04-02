@@ -15,15 +15,6 @@ class LatestRates(ListView):
     context_object_name = 'rates'
     success_url = reverse_lazy('index')
 
-'''
-class Rate(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    currency = models.PositiveSmallIntegerField(choices=mch.CURRENCY_CHOICES)
-    buy = models.DecimalField(max_digits=4, decimal_places=2)
-    sale = models.DecimalField(max_digits=4, decimal_places=2)
-    source = models.PositiveSmallIntegerField(choices=mch.SOURCE_CHOICES)
-'''
-
 
 # Create your views here
 class RateCSV(View):
