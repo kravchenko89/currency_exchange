@@ -21,7 +21,7 @@ urlpatterns = [
 
     path('auth/', include('django.contrib.auth.urls')),
 
-    path('', TemplateView.as_view(template_name='base.html'), name='index'),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
 
     path(f'{API_PREFIX}/currency/', include('currency.api.urls')),
     path(f'{API_PREFIX}/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

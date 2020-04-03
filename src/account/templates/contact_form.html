@@ -1,15 +1,33 @@
 {% extends 'base.html' %}
 
-{% block title %}
-EMAIL LIST
-{% endblock title %}
+{% block title %}Email send{% endblock title %}
 
 {% block content %}
 
-<form action="{% url 'account:email-new' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save" />
-</form>
 
+
+<form method="post">
+    {% csrf_token %}
+<h2 class="text-center">Email Form</h2>
+
+{% load crispy_forms_tags %}
+
+    <div>
+
+      <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.email|as_crispy_field }}
+      </div>
+        <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.title|as_crispy_field }}
+      </div>
+        <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.text|as_crispy_field }}
+      </div>
+
+
+  </div>
+
+  <button type="submit" class="btn btn-primary col-sm-6 col-md-5 col-lg-4 mt-5 mx-auto d-block">Send</button>
+
+</form>
 {% endblock content %}

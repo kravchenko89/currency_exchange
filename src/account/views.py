@@ -58,7 +58,7 @@ class UserLogin(LoginView):
 
 class EmailUs(CreateView):
     model = Contact
-    template_name = 'my_profile.html'
+    template_name = 'contact_form.html'
     queryset = Contact.objects.all()
     fields = ('email', 'title', 'text')
     success_url = reverse_lazy('index')
