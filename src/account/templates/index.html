@@ -5,14 +5,16 @@
 {% block content %}
 <section class="resume-section p-3 p-lg-5 d-flex align-items-center" id="about">
   <div class="w-100">
-        <h2 class="">your username : {{ user.username }}
-
+        <h2 style="font-size:25px">
+          your username : {{ user.username }}
+          <br>
+          your email : {{ user.email }}
+          <br>
+          your phone : {{ user.phone }}
         </h2>
-    <h2 class="">your email : {{ user.email }}</h2>
-            <h2 class="">your phone : {{ user.phone }}</h2>
 
       <div class="w-100">
-        <h1 class="text-success">Vadim
+        <h1 style="font-size:75px" class="text-success">Vadim
           <span class="text-info">Kravchenko</span>
         </h1>
         <div class="subheading mb-5">··· Ukraine ··· Dnipro ··· (093) 411-91-4 ···
@@ -44,7 +46,7 @@
         <h3 class="mb-0">Python Developer</h3>
         <div class="subheading mb-3">Intelitec Solutions</div>
         <div>
-          <img src="https://lms.ithillel.ua/uploads/certificates/43452190_en.png">
+          <img style="max-width:100%" src="https://lms.ithillel.ua/uploads/certificates/43452190_en.png">
         </div>
         <p>TODO</p>
       </div>
