@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
+from twilio.rest import Client
 
 from account.tasks import send_activation_code_async, send_activation_code_sms  # send_activation_sms_code_async
 
@@ -65,8 +66,7 @@ class ActivationCodeSMS(models.Model):
         return diff.days > 5
 
     def send_activation_code_sms(self):
-        import os
-        from twilio.rest import Client
+
         account_sid = settings.TWILIO_ACCOUNT_SID
         auth_token = settings.TWILIO_AUTH_TOKEN
 
