@@ -26,19 +26,20 @@ class Command(BaseCommand):
             response = requests.get(url)
             r_json = response.json()
             for rate in r_json['exchangeRate']:
-                if rate['currency'] in {'USD', 'EUR'}:
-                    if rate.__contains__('purchaseRate') and rate.__contains__('saleRate'):
+                if 'currency' in rate:
+                    if rate['currency'] in {'USD', 'EUR'}:
+                        if 'purchaseRate' in rate and 'saleRate' in rate:
 
-                        currency = mch.CURR_USD if rate['currency'] == 'USD' else mch.CURR_EUR
-                        rate_kwargs = {
-                            'created': dt,
-                            'currency': currency,
-                            'buy': Decimal(rate['purchaseRate']).__round__(2),
-                            'sale': Decimal(rate['saleRate']).__round__(2),
-                            'source': mch.SR_PRIVAT,
-                        }
-                        new_rate = Rate(**rate_kwargs)
-                        last_rate = Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).last()
+                            currency = mch.CURR_USD if rate['currency'] == 'USD' else mch.CURR_EUR
+                            rate_kwargs = {
+                                'created': dt,
+                                'currency': currency,
+                                'buy': Decimal(rate['purchaseRate']).__round__(2),
+                                'sale': Decimal(rate['saleRate']).__round__(2),
+                                'source': mch.SR_PRIVAT,
+                            }
+                            new_rate = Rate(**rate_kwargs)
+                            last_rate = Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).last()
 
-                        if last_rate is None or (new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
-                            new_rate.save()
+                            if last_rate is None or (new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
+                                new_rate.save()

@@ -72,16 +72,16 @@ services:
 
   celerybeat:
     build: .
-    command: celery -A currency_exchange beat -l info --workdir=/srv/project/src
+    command: /bin/bash ./commands/start_celerybeat.sh
     container_name: celerybeat
     restart: always
     env_file:
       - .env
-    volumes:
-      - ./:/srv/project
     depends_on:
       - rabbitmq
       - postgres
+    volumes:
+      - ./:/srv/project
 
 volumes:
    pgdata: {}
