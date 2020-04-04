@@ -149,7 +149,7 @@ CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
 CELERY_BEAT_SCHEDULE = {
     'parse-rates': {
         'task': 'currency.tasks.parse_rates',
-        'schedule': crontab(minute='0', hour='*/1')
+        'schedule': crontab(hour='*/1')
     }
 
 }
