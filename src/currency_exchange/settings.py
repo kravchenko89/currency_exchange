@@ -207,6 +207,18 @@ SWAGGER_SETTINGS = {
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://eb5cc71710e1423caed3245e1490965c@sentry.io/5188562",
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
 try:
     from currency_exchange.settings_local import *  # noqa
 except ImportError:
