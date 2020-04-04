@@ -1,6 +1,8 @@
 Celery  -A  currency_exchange worker -l info
 docker-compose  up -d
 docker-compose  down
+docker-compose  up -d --build
+
 docker container kill $(docker ps -q)
 
 docker logs -f --tail 100 nginx     # -it nginx sh
@@ -15,7 +17,7 @@ docker container ls
 docker-compose restart rabbitmq postgres web
 docker images -a
 
-docker-compose  up -d --build
+
 
 sudo nginx -s stop
 
