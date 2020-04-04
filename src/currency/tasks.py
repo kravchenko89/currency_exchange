@@ -46,11 +46,11 @@ def mono():
                 'currency': currency,
                 'buy': Decimal(rate['rateBuy']).__round__(2),
                 'sale': Decimal(rate['rateSell']).__round__(2),
-                'source': mch.SR_PRIVAT,
+                'source': mch.SR_MONO,
             }
 
             new_rate = Rate(**rate_kwargs)
-            last_rate = Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).last()
+            last_rate = Rate.objects.filter(currency=currency, source=mch.SR_MONO).last()
 
             if last_rate is None or (new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
                 new_rate.save()

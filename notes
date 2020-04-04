@@ -1,6 +1,6 @@
 Celery  -A  currency_exchange worker -l info
-docker-compose -f dc.yml up -d
-docker-compose -f dc.yml down
+docker-compose  up -d
+docker-compose  down
 docker container kill $(docker ps -q)
 
 docker logs -f --tail 100 nginx     # -it nginx sh
@@ -12,10 +12,10 @@ docker system prune -a    # delete cache
 docker ps
 docker ps -a
 docker container ls
-docker-compose -f dc.yml restart rabbitmq postgres web
+docker-compose restart rabbitmq postgres web
 docker images -a
 
-docker-compose -f dc.yml up --build
+docker-compose  up -d --build
 
 sudo nginx -s stop
 
