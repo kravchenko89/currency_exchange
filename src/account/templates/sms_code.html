@@ -4,11 +4,15 @@
 
 {% block content %}
 
-
+{% load crispy_forms_tags %}
 
 <form method="post">
     {% csrf_token %}
-{{ form.as_p }}
-    <button type="submit">Submit</button>
+    <h2 class="text-center">Email Form</h2>
+
+      <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+            {{ form|crispy }}
+      </div>
+    <button type="submit" class="btn btn-primary col-6 col-sm-6 col-md-5 col-lg-4 mt-5 mx-auto d-block">>Submit</button>
 </form>
 {% endblock content %}

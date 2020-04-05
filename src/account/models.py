@@ -59,22 +59,22 @@ class ActivationCodeSMS(models.Model):
     code = models.PositiveSmallIntegerField(default=generate_code)
     is_activated = models.BooleanField(default=False)
 
-    @property
-    def is_expired(self):
-        now = datetime.now()
-        diff = now - self.created
-        return diff.days > 5
-
-    def send_activation_code_sms(self):
-
-        account_sid = settings.TWILIO_ACCOUNT_SID
-        auth_token = settings.TWILIO_AUTH_TOKEN
-
-        client = Client(account_sid, auth_token)
-
-        client.messages.create(
-            body=f'enter the code from SMS to activate your account{self.code}',
-            from_=settings.MY_PHONE_NUMBER,
-            to=self.user.phone
-        )
-        send_activation_code_sms.delay(self.user.phone, self.code)
+    # @property
+    # def is_expired(self):
+    #     now = datetime.now()
+    #     diff = now - self.created
+    #     return diff.days > 5
+    #
+    # def send_activation_code_sms(self):
+    #
+    #     account_sid = settings.TWILIO_ACCOUNT_SID
+    #     auth_token = settings.TWILIO_AUTH_TOKEN
+    #
+    #     client = Client(account_sid, auth_token)
+    #
+    #     client.messages.create(
+    #         body=f'enter the code from SMS to activate your account{self.code}',
+    #         from_=settings.MY_PHONE_NUMBER,
+    #         to=self.user.phone
+    #     )
+    #     send_activation_code_sms.delay(self.user.phone, self.code)
