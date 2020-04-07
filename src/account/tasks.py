@@ -24,10 +24,11 @@ def send_activation_code_async(email_to, code):
 
 
 @shared_task()
-def send_activation_code_sms(phone, code):
-    print(phone, code)
-    # client.messages.create(
-    #     body=f'enter the code from SMS to activate your account{self.code}',
-    #     from_=settings.MY_PHONE_NUMBER,
-    #     to=self.user.phone
-    # )
+def send_activation_code_sms(email_to, code):
+    send_mail(
+        'Your activation code',
+        code,
+        'fenderoksp@gmail.com',
+        [email_to],
+        fail_silently=False,
+    )

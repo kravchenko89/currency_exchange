@@ -4,13 +4,13 @@ import pytest
 from rest_framework.reverse import reverse
 
 from account.models import User
-from account.tasks import send_activation_code_async
+from account.tasks import send_activation_code_sms
 from currency.tasks import privat
 
 
-def test_sanity():
-    assert 200 == 200
-    # assert 200 == 201
+# def test_sanity():
+#     assert 200 == 200
+#     # assert 200 == 201
 
 
 @pytest.mark.django_db
@@ -28,30 +28,41 @@ def test_get_rates_list(api_client):
     response = api_client.get(reverse('api-currency:rates'))
     assert response.status_code == 200
 
-    response = api_client.post(reverse('api-currency:rates'), data={}, format='json')
+    response = api_client.post(reverse('api-currency:rates'),
+                               data={}, format='json')
     print(response.json())
     assert response.status_code == 400
 
 
+# @pytest.mark.skip
 @pytest.mark.django_db
 def test_csv_rates(client):
     response = client.get(reverse('currency:download-rates'))
     assert response.status_code == 200
 
 
-@pytest.mark.django_db
-def test_task(mocker):
-    requests_get_patcher = mocker.patch('requests.get')
-    requests_get_patcher.return_value = 1
-    privat()
+# class Response:
+#     pass
+#
+# @pytest.mark.django_db
+# def test_task(mocker):
+#
+#     def mock():
+#         response = Response()
+#         response.json = lambda: [{'ccy': 'USD'}]
+#         return response
+#
+#     requests_get_patcher = mocker.patch('requests.get')
+#     requests_get_patcher.return_value = mock()
+#     privat()
 
 
 @pytest.mark.django_db
-def test_send_email(mocker):
+def test_send_email():
     from django.core import mail
     emails = mail.outbox
     print('EMAILS:', emails)
 
-    send_activation_code_async(1, str(uuid4()))
+    send_activation_code_sms(1, '12345')
     emails = mail.outbox
     print('EMAILS', emails)

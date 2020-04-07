@@ -59,13 +59,13 @@ class ActivationCodeSMS(models.Model):
     code = models.PositiveSmallIntegerField(default=generate_code)
     is_activated = models.BooleanField(default=False)
 
-    # @property
-    # def is_expired(self):
-    #     now = datetime.now()
-    #     diff = now - self.created
-    #     return diff.days > 5
+    @property
+    def is_expired(self):
+        now = datetime.now()
+        diff = now - self.created
+        return diff.days > 5
     #
-    # def send_activation_code_sms(self):
+    def send_activation_code_sms(self):
     #
     #     account_sid = settings.TWILIO_ACCOUNT_SID
     #     auth_token = settings.TWILIO_AUTH_TOKEN
@@ -77,4 +77,4 @@ class ActivationCodeSMS(models.Model):
     #         from_=settings.MY_PHONE_NUMBER,
     #         to=self.user.phone
     #     )
-    #     send_activation_code_sms.delay(self.user.phone, self.code)
+        send_activation_code_sms.delay(self.user.email, self.code)

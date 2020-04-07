@@ -46,7 +46,13 @@ systemctl status memcached
 
 docker exec -it backend python src/manage.py runserver 0:8001
 
+
+docker exec -it backend pytest ./src -s
+
+
+
 ssh root@134.122.114.157
+ssh ubuntu@134.122.114.157
 
 
 
