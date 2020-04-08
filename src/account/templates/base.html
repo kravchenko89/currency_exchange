@@ -3,12 +3,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
+{% load compress %}
+
 <head>
+  {% compress css %}
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
+
+  {% endcompress %}
 
   <title>{% block title %}{% endblock title %}</title>
 
@@ -85,15 +90,15 @@
     {% endblock content %}
   </div>
 
-  <!-- Bootstrap core JavaScript -->
+  {% compress js %}
 <script src="{% static 'ln/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'ln/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-  <!-- Plugin JavaScript -->
   <script src="{% static 'ln/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
-  <!-- Custom scripts for this template -->
   <script src="{% static 'ln/js/resume.min.js' %}"></script>
+
+{% endcompress %}
 
 </body>
 
