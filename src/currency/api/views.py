@@ -29,6 +29,10 @@ class Contacts(generics.ListCreateAPIView):
         return super().get_queryset().filter(email=user.email)
 
 
-class Contact(generics.RetrieveUpdateAPIView):
+# class Contact(generics.RetrieveUpdateAPIView):
+#     queryset = Contact.objects.all()
+#     serializer_class = ContactSerializer
+
+class Contact(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer

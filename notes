@@ -44,6 +44,11 @@ docker exec -it backend python src/manage.py collectstatic
 docker exec -it backend python src/manage.py shell_plus
 systemctl status memcached
 
+
+
+docker exec -it backend pytest --cov=./src ./src --cov-config .coveragerc --cov-report html
+docker exec -it backend pytest --cov=./src ./src/tests/test_sanity.py::test_send_email --cov-config .coveragerc --cov-report html -s
+
 docker exec -it backend python src/manage.py runserver 0:8001
 
 

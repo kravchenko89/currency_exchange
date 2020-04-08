@@ -7,7 +7,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from twilio.rest import Client
 
-from account.tasks import send_activation_code_async, send_activation_code_sms  # send_activation_sms_code_async
+from account.tasks import send_activation_code_sms  # send_activation_sms_code_async
 
 
 def avatar_path(instance, filename: str) -> str:
