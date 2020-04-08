@@ -6,6 +6,17 @@
 
 <h2 class="text-center">Latest Rates</h2>
 
+{% load crispy_forms_tags %}
+
+<form class=" mx-auto col-sm-6 col-md-5 col-lg-4 mb-5" method="get">
+  {{ filter.form|crispy }}
+
+      <button type="submit" class="btn btn-primary col-sm-6 col-md-5 col-lg-4 mt-5 mx-auto d-block">Changes</button>
+
+</form>
+
+
+
 <table class="table table-sm table-success">
   <thead>
     <tr>
@@ -30,6 +41,6 @@
 </table>
 
 
-
+{% include 'includes/pagination.html' %}
 
 {% endblock content %}
