@@ -14,6 +14,7 @@ class RateFilter(django_filters.FilterSet):
                 'type': 'date',
             }
         ))
+
     # created_dt = django_filters.DateTimeFilter(
     #     field_name='created',
     #     widget=DateTimeInput(
@@ -24,4 +25,4 @@ class RateFilter(django_filters.FilterSet):
     #     ))
     class Meta:
         model = Rate
-        fields = ['buy', 'sale', 'source', 'created', ]
+        fields = ['buy', 'sale', 'source', 'created_date']
