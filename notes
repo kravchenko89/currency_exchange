@@ -38,8 +38,12 @@ https://www.adaptamize.com/blog/simple-docker-django-celery
 
 docker exec -it backend python src/manage.py makemigrations
 docker exec -it backend python src/manage.py migrate
+
 docker exec -it backend python src/manage.py createsuperuser
+
 docker exec -it backend python src/manage.py collectstatic
+
+docker exec -it backend python src/manage.py compress
 
 docker exec -it backend python src/manage.py shell_plus
 systemctl status memcached
