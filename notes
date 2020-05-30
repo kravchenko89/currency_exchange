@@ -1,7 +1,7 @@
 Celery  -A  currency_exchange worker -l info
-docker-compose  up -d
-docker-compose  down
-docker-compose  up -d --build
+docker-compose up -d
+docker-compose down
+docker-compose up -d --build
 
 docker container kill $(docker ps -q)
 

@@ -33,20 +33,20 @@ class Contact(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class ActivationCode(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activation_codes')
-    created = models.DateTimeField(auto_now_add=True)
-    code = models.UUIDField(default=uuid4, editable=False, unique=True)
-    is_activated = models.BooleanField(default=False)
-
-    @property
-    def is_expired(self):
-        now = datetime.now()
-        diff = now - self.created
-        return diff.days > 5
-
-    def send_activation_code(self):
-        send_activation_code_async.delay(self.user.email, self.code)
+# class ActivationCode(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activation_codes')
+#     created = models.DateTimeField(auto_now_add=True)
+#     code = models.UUIDField(default=uuid4, editable=False, unique=True)
+#     is_activated = models.BooleanField(default=False)
+#
+#     @property
+#     def is_expired(self):
+#         now = datetime.now()
+#         diff = now - self.created
+#         return diff.days > 5
+#
+#     def send_activation_code(self):
+#         send_activation_code_async.delay(self.user.email, self.code)
 
 
 def generate_code():
@@ -64,7 +64,7 @@ class ActivationCodeSMS(models.Model):
         now = datetime.now()
         diff = now - self.created
         return diff.days > 5
-    #
+
     def send_activation_code_sms(self):
     #
     #     account_sid = settings.TWILIO_ACCOUNT_SID

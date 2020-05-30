@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
 
@@ -28,7 +29,7 @@ def send_activation_code_sms(email_to, code):
     send_mail(
         'Your activation code',
         code,
-        'fenderoksp@gmail.com',
-        [email_to],
+        from_email=[settings.EMAIL_HOST_USER, ],
+        recipient_list=email_to,
         fail_silently=False,
     )
