@@ -1,12 +1,14 @@
 import csv
 
 from django.http import HttpResponse
-from django.views.generic import View
-from django.urls import reverse_lazy
+from django.views.generic import View, TemplateView
 from django_filters.views import FilterView
+from django.core.cache import cache
 
 from currency.filters import RateFilter
 from currency.models import Rate
+from currency import model_choices as mch
+from currency.utils import genetere_rate_cache_key
 
 
 class LatestRates(FilterView):
@@ -73,3 +75,49 @@ class RateCSV(View):
             # ]))
 
         return response
+
+
+class LatestRate(TemplateView):
+    template_name = 'latest-rates.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['rates'] = Rate.objects.filter(course=mch.SR_PRIVAT, currency=mch.CURR_USD).last()
+        # rates = {
+        #     'privatBank': [Rate.objects.filter(source=mch.SR_PRIVAT, currency=mch.CURR_USD).last(),
+        #                    Rate.objects.filter(source=mch.SR_PRIVAT, currency=mch.CURR_USD).last()],
+        #     'MonoBank': [Rate.objects.filter(source=mch.SR_PRIVAT, currency=mch.CURR_USD).last(),
+        #                  Rate.objects.filter(source=mch.SR_PRIVAT, currency=mch.CURR_USD).last()],
+
+        rates = []
+        for bank in mch.SOURCE_CHOICES:
+            source = bank[0]
+            for curr in mch.CURRENCY_CHOICES:
+                currency = curr[0]
+                cache_key = genetere_rate_cache_key(source, currency)
+
+                rate = cache.get(cache_key)
+                if rate is None:
+                    rate = Rate.objects.filter(source=source, currency=currency).order_by('created').last()
+                    if rate:
+                        rate_dict = {
+                            'currency': rate.currency,
+                            'source': rate.source,
+                            'sale': rate.sale,
+                            'buy': rate.buy,
+                            'created': rate.created,
+                        }
+                        rates.append(rate_dict)
+                        cache.set(cache_key, rate_dict, 60 * 15)  # 15 minutes
+                        # cache.set(cache_key, rate_dict, 5)  # 5 seconds
+                else:
+                    rates.append(rate)
+
+            context['rates'] = rates
+            # Rate.objects.filter(source=mch.SR_PRIVAT, currency=mch.CURR_USD).order_by('-created')[0]
+            return context
+
+'''
+source PrivatBank - latest USD, latest UER
+source MonoBank - latest USD, latest UER
+'''
